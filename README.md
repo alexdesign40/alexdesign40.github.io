@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-  <title>Currículum Vitae</title>
+  <h1>Currículum Vitae</h1>
 
-  <h1>María Rodríguez Pérez</h1>
+  <h2>María Rodríguez Pérez</h2>
   <p><strong>Puesto:</strong> Gerente de Operaciones</p>
 
   <hr>
