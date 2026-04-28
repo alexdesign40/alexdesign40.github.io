@@ -1,668 +1,800 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Academia Taekwondo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <title>NeuralPath — Aprende Machine Learning desde cero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --red: #c0392b;
-      --dark-red: #922b21;
-      --gold: #d4a017;
-      --black: #0a0a0a;
-      --dark: #111111;
-      --mid: #1c1c1c;
-      --light: #f5f0e8;
-      --white: #ffffff;
-      --gray: #888;
+      --bg:       #f4f1eb;
+      --ink:      #0f0f0f;
+      --mid:      #2a2a2a;
+      --soft:     #7a7a6e;
+      --accent:   #1a6b3c;
+      --accent2:  #e8f5ee;
+      --yellow:   #f5c842;
+      --yellow-d: #d4a800;
+      --card:     #ffffff;
+      --border:   #ddd9d0;
+      --code:     #1e1e2e;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--black);
-      color: var(--light);
-      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
       overflow-x: hidden;
     }
 
-    /* ─── NAVBAR ─── */
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 256px;
+      opacity: 0.5;
+    }
+
+    /* ── NAV ── */
     nav {
       position: fixed; top: 0; width: 100%; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.2rem 4rem;
-      background: rgba(10,10,10,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(192,57,43,0.3);
+      padding: 1.1rem 4rem;
+      background: rgba(244,241,235,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
     }
     .logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.8rem;
-      letter-spacing: 0.1em;
-      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.3rem;
+      color: var(--ink); text-decoration: none;
+      display: flex; align-items: center; gap: 0.5rem;
     }
-    .logo span { color: var(--red); }
-    nav ul { list-style: none; display: flex; gap: 2.5rem; }
+    .logo-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; display: inline-block; }
+    nav ul { list-style: none; display: flex; gap: 2rem; align-items: center; }
     nav ul a {
-      color: var(--light); text-decoration: none;
-      font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase;
-      font-weight: 700;
+      color: var(--mid); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500;
       transition: color 0.2s;
     }
-    nav ul a:hover { color: var(--gold); }
+    nav ul a:hover { color: var(--accent); }
     .nav-cta {
-      background: var(--red); color: var(--white) !important;
-      padding: 0.5rem 1.4rem; border-radius: 2px;
+      background: var(--ink) !important; color: var(--bg) !important;
+      padding: 0.55rem 1.4rem; border-radius: 100px;
+      font-size: 0.82rem !important; font-weight: 500 !important;
       transition: background 0.2s !important;
     }
-    .nav-cta:hover { background: var(--dark-red) !important; color: var(--white) !important; }
+    .nav-cta:hover { background: var(--accent) !important; }
 
-    /* ─── HERO ─── */
+    /* ── HERO ── */
     #hero {
       min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 4rem;
+      padding: 8rem 4rem 5rem;
       position: relative; overflow: hidden;
-      text-align: center;
-      padding: 0 2rem;
     }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 60% 60% at 70% 50%, rgba(192,57,43,0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(212,160,23,0.08) 0%, transparent 60%),
-        var(--black);
+    .hero-bg-circle {
+      position: absolute; right: -10%; top: 10%;
+      width: 55vw; height: 55vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,107,60,0.12) 0%, transparent 70%);
+      pointer-events: none;
     }
-    .hero-lines {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,0.02) 80px),
-        repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.02) 80px);
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent2); border: 1px solid rgba(26,107,60,0.25);
+      color: var(--accent); border-radius: 100px;
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.05em;
+      padding: 0.4rem 1rem; margin-bottom: 1.8rem;
+      animation: fadeUp 0.7s ease both;
     }
-    .hero-kicker {
-      position: relative;
-      font-size: 0.75rem; letter-spacing: 0.4em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 1.5rem;
-      font-weight: 700;
-      animation: fadeUp 0.8s ease both;
-    }
-    .hero-kicker::before, .hero-kicker::after {
-      content: ''; display: inline-block; width: 40px; height: 1px;
-      background: var(--gold); vertical-align: middle; margin: 0 12px;
-    }
+    .badge-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
     .hero-title {
-      position: relative;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(4rem, 14vw, 11rem);
-      line-height: 0.9;
-      color: var(--white);
-      letter-spacing: 0.03em;
-      animation: fadeUp 0.8s 0.15s ease both;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      line-height: 1.02;
+      color: var(--ink);
+      animation: fadeUp 0.7s 0.1s ease both;
     }
-    .hero-title .red { color: var(--red); }
-    .hero-title .outline {
-      -webkit-text-stroke: 2px var(--white);
-      color: transparent;
+    .hero-title .underline-green {
+      position: relative; display: inline-block;
     }
-    .hero-sub {
-      position: relative;
-      font-size: 1rem; font-weight: 300; letter-spacing: 0.1em;
-      color: var(--gray); margin-top: 1.5rem; margin-bottom: 3rem;
-      max-width: 500px;
-      animation: fadeUp 0.8s 0.3s ease both;
+    .hero-title .underline-green::after {
+      content: '';
+      position: absolute; bottom: 2px; left: 0; width: 100%; height: 6px;
+      background: var(--yellow); z-index: -1; border-radius: 2px;
+    }
+    .hero-desc {
+      font-size: 1.05rem; color: var(--soft); line-height: 1.75;
+      margin: 1.5rem 0 2.5rem; max-width: 440px;
+      animation: fadeUp 0.7s 0.2s ease both;
     }
     .hero-btns {
-      position: relative; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
-      animation: fadeUp 0.8s 0.45s ease both;
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp 0.7s 0.3s ease both;
     }
     .btn-primary {
-      background: var(--red); color: var(--white);
-      padding: 1rem 2.5rem; font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.1rem; letter-spacing: 0.15em;
-      border: none; cursor: pointer; border-radius: 2px;
+      background: var(--ink); color: var(--bg);
+      padding: 0.9rem 2rem; border-radius: 100px;
+      font-size: 0.9rem; font-weight: 500;
+      border: none; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
       transition: background 0.2s, transform 0.15s;
-      text-decoration: none;
     }
-    .btn-primary:hover { background: var(--dark-red); transform: translateY(-2px); }
-    .btn-outline {
-      background: transparent; color: var(--light);
-      padding: 1rem 2.5rem; font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.1rem; letter-spacing: 0.15em;
-      border: 1px solid rgba(255,255,255,0.3); cursor: pointer; border-radius: 2px;
+    .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+    .btn-ghost {
+      background: transparent; color: var(--ink);
+      padding: 0.9rem 2rem; border-radius: 100px;
+      font-size: 0.9rem; font-weight: 500;
+      border: 1.5px solid var(--border); cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
       transition: border-color 0.2s, transform 0.15s;
-      text-decoration: none;
     }
-    .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
-    .hero-scroll {
-      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
-      font-size: 0.7rem; letter-spacing: 0.25em; color: var(--gray); text-transform: uppercase;
-      animation: bounce 2s infinite;
+    .btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); }
+    .hero-trust {
+      margin-top: 2.5rem; font-size: 0.78rem; color: var(--soft);
+      display: flex; align-items: center; gap: 0.6rem;
+      animation: fadeUp 0.7s 0.4s ease both;
     }
-    .hero-scroll::after {
-      content: ''; display: block; width: 1px; height: 40px; background: var(--red);
+    .trust-avatars { display: flex; }
+    .trust-avatars span {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2px solid var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; margin-left: -6px;
     }
+    .trust-avatars span:first-child { margin-left: 0; }
 
-    /* ─── STATS STRIP ─── */
-    .stats-strip {
-      background: var(--red);
-      display: flex; justify-content: space-around; flex-wrap: wrap;
-      padding: 2rem 4rem; gap: 1rem;
+    /* ── HERO VISUAL (right side) ── */
+    .hero-visual {
+      position: relative;
+      animation: fadeUp 0.7s 0.2s ease both;
     }
-    .stat { text-align: center; }
-    .stat-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 3rem; color: var(--white); line-height: 1;
+    .code-window {
+      background: var(--code);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.18);
+      font-family: 'DM Mono', monospace;
     }
-    .stat-label {
-      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: rgba(255,255,255,0.7); margin-top: 0.2rem;
+    .code-bar {
+      padding: 0.9rem 1.2rem;
+      background: #16162a;
+      display: flex; align-items: center; gap: 0.5rem;
     }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.r { background: #ff5f57; }
+    .dot.y { background: #febc2e; }
+    .dot.g { background: #28c840; }
+    .code-filename {
+      font-size: 0.72rem; color: #666; margin-left: auto;
+      font-family: 'DM Mono', monospace;
+    }
+    .code-body { padding: 1.5rem 1.8rem; font-size: 0.82rem; line-height: 1.8; }
+    .c-comment { color: #6a737d; }
+    .c-keyword { color: #ff79c6; }
+    .c-string  { color: #f1fa8c; }
+    .c-func    { color: #50fa7b; }
+    .c-var     { color: #8be9fd; }
+    .c-num     { color: #bd93f9; }
+    .c-white   { color: #f8f8f2; }
+    .code-output {
+      background: #0d1117; padding: 1rem 1.8rem;
+      border-top: 1px solid #2a2a3e;
+      font-size: 0.78rem; color: #50fa7b; font-family: 'DM Mono', monospace;
+    }
+    .floating-card {
+      position: absolute;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      font-size: 0.8rem;
+    }
+    .fc-top {
+      top: -1.5rem; left: -2rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .fc-icon { font-size: 1.5rem; }
+    .fc-label { font-weight: 600; color: var(--ink); font-size: 0.85rem; }
+    .fc-sub   { color: var(--soft); font-size: 0.72rem; }
+    .fc-bottom {
+      bottom: -1.5rem; right: -1.5rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .fc-progress { width: 90px; }
+    .fc-prog-label { font-size: 0.7rem; color: var(--soft); margin-bottom: 0.3rem; }
+    .fc-prog-bar { height: 5px; background: #eee; border-radius: 10px; overflow: hidden; }
+    .fc-prog-fill { height: 100%; background: var(--accent); border-radius: 10px; width: 68%; }
+    .fc-pct { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--accent); }
 
-    /* ─── SECTIONS ─── */
-    section { padding: 6rem 4rem; }
-    .section-label {
-      font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase;
-      color: var(--red); font-weight: 700; margin-bottom: 1rem;
+    /* ── LOGOS STRIP ── */
+    .logos-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 4rem;
+      display: flex; align-items: center; justify-content: center;
+      gap: 3rem; flex-wrap: wrap;
+      background: var(--card);
+    }
+    .logos-label { font-size: 0.72rem; color: var(--soft); letter-spacing: 0.1em; text-transform: uppercase; }
+    .tech-pill {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-family: 'DM Mono', monospace; font-size: 0.82rem;
+      color: var(--mid); font-weight: 500;
+    }
+    .tech-pill span { font-size: 1.2rem; }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 4rem; position: relative; }
+    .section-chip {
+      display: inline-block;
+      background: var(--accent2); color: var(--accent);
+      border: 1px solid rgba(26,107,60,0.2);
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.3rem 0.9rem; border-radius: 100px; margin-bottom: 1rem;
     }
     .section-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      color: var(--white); line-height: 1.05;
-      margin-bottom: 1.5rem;
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      color: var(--ink); line-height: 1.1; margin-bottom: 1rem;
     }
-    .section-title em { color: var(--red); font-style: normal; }
+    .section-title em { color: var(--accent); font-style: normal; }
     .section-body {
-      font-size: 0.95rem; color: var(--gray); line-height: 1.8;
-      max-width: 540px;
+      font-size: 1rem; color: var(--soft); line-height: 1.8; max-width: 520px;
     }
 
-    /* ─── ABOUT ─── */
-    #about { background: var(--dark); }
-    .about-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
-      max-width: 1200px; margin: 0 auto;
+    /* ── HOW IT WORKS ── */
+    #how { background: var(--ink); color: var(--bg); }
+    #how .section-chip { background: rgba(26,107,60,0.25); color: #6fcf97; border-color: rgba(111,207,151,0.2); }
+    #how .section-title { color: var(--bg); }
+    #how .section-body { color: #888; }
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem; margin-top: 3.5rem; max-width: 1100px;
     }
-    .about-visual {
-      position: relative; height: 420px;
+    .step-card {
+      padding: 2rem;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      background: #1a1a1a;
+      transition: border-color 0.2s, transform 0.2s;
     }
-    .about-card {
-      position: absolute;
-      background: var(--mid);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 4px;
-      overflow: hidden;
+    .step-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .step-num {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 3rem; color: rgba(255,255,255,0.07);
+      line-height: 1; margin-bottom: 1rem;
     }
-    .about-card.main {
-      width: 75%; height: 100%; left: 0; top: 0;
-      display: flex; align-items: center; justify-content: center;
+    .step-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+    .step-title {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 1.1rem; color: var(--bg); margin-bottom: 0.5rem;
     }
-    .about-card.accent {
-      width: 45%; height: 55%; right: 0; bottom: 0;
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; gap: 0.5rem;
-      border-left: 3px solid var(--red);
-    }
-    .about-icon {
-      font-size: 5rem; line-height: 1;
-    }
-    .about-card.main .about-icon { font-size: 8rem; }
-    .about-card-label {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.3rem; letter-spacing: 0.1em; color: var(--white);
-    }
-    .about-card-sub { font-size: 0.7rem; color: var(--gray); letter-spacing: 0.1em; }
-    .values-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
-    .value-item {
-      display: flex; align-items: center; gap: 0.8rem;
-      font-size: 0.9rem; color: var(--light);
-    }
-    .value-dot {
-      width: 8px; height: 8px; background: var(--red); border-radius: 50%; flex-shrink: 0;
-    }
+    .step-desc { font-size: 0.88rem; color: #777; line-height: 1.7; }
 
-    /* ─── PROGRAMS ─── */
-    #programs { background: var(--black); }
-    .programs-header { max-width: 1200px; margin: 0 auto 3.5rem; }
-    .programs-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem; max-width: 1200px; margin: 0 auto;
+    /* ── CURRÍCULO ── */
+    #curriculum { background: var(--bg); }
+    .curriculum-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+      margin-top: 3rem; max-width: 900px;
     }
-    .program-card {
-      background: var(--mid);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 4px; overflow: hidden;
-      transition: transform 0.25s, border-color 0.25s;
+    .module-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      display: flex; gap: 1.2rem; align-items: flex-start;
+      transition: box-shadow 0.2s, transform 0.2s;
       cursor: default;
     }
-    .program-card:hover { transform: translateY(-6px); border-color: var(--red); }
-    .program-top {
-      padding: 2rem 2rem 1.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+    .module-card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
     }
-    .program-emoji { font-size: 2.5rem; margin-bottom: 1rem; }
-    .program-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.6rem; color: var(--white); letter-spacing: 0.05em;
+    .module-num {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--accent2); color: var(--accent);
+      font-family: 'DM Mono', monospace; font-weight: 500; font-size: 0.8rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .program-age {
-      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--gold); margin-top: 0.2rem;
+    .module-num.done { background: var(--accent); color: #fff; }
+    .module-info {}
+    .module-title {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 0.95rem; color: var(--ink); margin-bottom: 0.3rem;
     }
-    .program-bottom { padding: 1.5rem 2rem; }
-    .program-desc { font-size: 0.88rem; color: var(--gray); line-height: 1.7; }
-    .program-tag {
-      display: inline-block; margin-top: 1rem;
-      background: rgba(192,57,43,0.15); color: var(--red);
-      border: 1px solid rgba(192,57,43,0.4);
-      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
-      padding: 0.3rem 0.8rem; border-radius: 2px;
+    .module-meta { font-size: 0.75rem; color: var(--soft); display: flex; gap: 1rem; }
+    .module-tag {
+      display: inline-block; margin-top: 0.6rem;
+      background: var(--accent2); color: var(--accent);
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem; border-radius: 4px;
     }
+    .module-tag.free { background: #fff9e0; color: var(--yellow-d); }
 
-    /* ─── INSTRUCTORES ─── */
-    #instructors { background: var(--dark); }
-    .instructors-inner { max-width: 1200px; margin: 0 auto; }
-    .instructors-header { margin-bottom: 3.5rem; }
-    .instructors-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem;
+    /* ── TESTIMONIOS ── */
+    #testimonials { background: var(--accent2); }
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
     }
-    .instructor-card {
-      text-align: center;
+    .testi-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.8rem;
       transition: transform 0.2s;
     }
-    .instructor-card:hover { transform: translateY(-4px); }
-    .instructor-avatar {
-      width: 120px; height: 120px; border-radius: 50%;
-      background: var(--mid); margin: 0 auto 1.2rem;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 3rem;
-      border: 3px solid var(--red);
+    .testi-card:hover { transform: translateY(-4px); }
+    .testi-stars { color: var(--yellow-d); font-size: 1rem; margin-bottom: 1rem; }
+    .testi-quote {
+      font-size: 0.92rem; color: var(--mid); line-height: 1.75; margin-bottom: 1.2rem;
     }
-    .instructor-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem; color: var(--white); letter-spacing: 0.05em;
+    .testi-author { display: flex; align-items: center; gap: 0.8rem; }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--accent2); display: flex; align-items: center;
+      justify-content: center; font-size: 1.2rem;
     }
-    .instructor-belt {
-      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--gold); margin-top: 0.2rem;
-    }
-    .instructor-bio {
-      font-size: 0.82rem; color: var(--gray); margin-top: 0.6rem; line-height: 1.6;
-    }
+    .testi-name { font-weight: 600; font-size: 0.85rem; color: var(--ink); }
+    .testi-role { font-size: 0.72rem; color: var(--soft); }
 
-    /* ─── HORARIOS ─── */
-    #schedule { background: var(--black); }
-    .schedule-inner { max-width: 900px; margin: 0 auto; }
-    .schedule-header { margin-bottom: 3rem; }
-    .schedule-grid {
-      display: grid; grid-template-columns: 1fr;
-      gap: 1px; background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden;
+    /* ── PRICING ── */
+    #pricing { background: var(--bg); }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem; margin-top: 3rem; max-width: 900px;
     }
-    .schedule-row {
-      display: grid; grid-template-columns: 120px 1fr 120px;
-      align-items: center; gap: 1rem;
-      background: var(--mid); padding: 1.2rem 2rem;
+    .price-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.2rem; position: relative;
+      transition: transform 0.2s;
+    }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-card.featured {
+      background: var(--ink); border-color: var(--ink);
+      color: var(--bg);
+    }
+    .price-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--yellow); color: var(--ink);
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.3rem 1rem; border-radius: 100px;
+    }
+    .price-plan { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--soft); font-weight: 600; margin-bottom: 0.5rem; }
+    .price-card.featured .price-plan { color: #888; }
+    .price-amount {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 3rem; color: var(--ink); line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .price-card.featured .price-amount { color: var(--bg); }
+    .price-period { font-size: 0.8rem; color: var(--soft); margin-bottom: 1.5rem; }
+    .price-card.featured .price-period { color: #777; }
+    .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 2rem; }
+    .price-features li {
+      font-size: 0.88rem; color: var(--mid); display: flex; align-items: center; gap: 0.6rem;
+    }
+    .price-card.featured .price-features li { color: #ccc; }
+    .price-check { color: var(--accent); font-weight: 700; }
+    .price-card.featured .price-check { color: #6fcf97; }
+    .btn-price-primary {
+      display: block; width: 100%; text-align: center;
+      background: var(--bg); color: var(--ink);
+      padding: 0.9rem; border-radius: 100px;
+      font-size: 0.88rem; font-weight: 600;
+      border: none; cursor: pointer; text-decoration: none;
       transition: background 0.2s;
     }
-    .schedule-row:hover { background: #222; }
-    .schedule-row.head {
-      background: var(--red); font-family: 'Bebas Neue', sans-serif;
-      letter-spacing: 0.1em; font-size: 1rem;
-    }
-    .schedule-day {
-      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--gold); font-weight: 700;
-    }
-    .schedule-class { font-size: 0.92rem; color: var(--light); }
-    .schedule-time { font-size: 0.82rem; color: var(--gray); text-align: right; }
-
-    /* ─── CTA ─── */
-    #cta {
-      background: var(--red);
-      text-align: center; padding: 6rem 4rem;
-    }
-    #cta .section-label { color: rgba(255,255,255,0.6); }
-    #cta .section-title { color: var(--white); margin: 0 auto 1rem; }
-    #cta .section-body { color: rgba(255,255,255,0.75); margin: 0 auto 2.5rem; }
-    .cta-form {
-      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; max-width: 500px; margin: 0 auto;
-    }
-    .cta-form input {
-      flex: 1; min-width: 180px;
-      padding: 0.9rem 1.2rem;
-      background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.3);
-      color: var(--white); border-radius: 2px;
-      font-family: 'Noto Sans KR', sans-serif; font-size: 0.9rem;
-    }
-    .cta-form input::placeholder { color: rgba(255,255,255,0.5); }
-    .cta-form input:focus { outline: none; border-color: var(--white); }
-    .btn-dark {
-      background: var(--black); color: var(--white);
-      padding: 0.9rem 2rem; font-family: 'Bebas Neue', sans-serif;
-      font-size: 1rem; letter-spacing: 0.15em;
-      border: none; cursor: pointer; border-radius: 2px;
+    .btn-price-primary:hover { background: var(--accent2); }
+    .btn-price-dark {
+      display: block; width: 100%; text-align: center;
+      background: var(--ink); color: var(--bg);
+      padding: 0.9rem; border-radius: 100px;
+      font-size: 0.88rem; font-weight: 600;
+      border: none; cursor: pointer; text-decoration: none;
       transition: background 0.2s;
     }
-    .btn-dark:hover { background: #1a1a1a; }
+    .btn-price-dark:hover { background: var(--accent); }
 
-    /* ─── FOOTER ─── */
+    /* ── CTA FINAL ── */
+    #cta-final {
+      background: var(--accent);
+      padding: 6rem 4rem; text-align: center;
+    }
+    #cta-final .section-title { color: #fff; max-width: 700px; margin: 0 auto 1rem; }
+    #cta-final .section-body { color: rgba(255,255,255,0.75); margin: 0 auto 2.5rem; }
+    .cta-input-row {
+      display: flex; gap: 0.8rem; flex-wrap: wrap;
+      justify-content: center; max-width: 480px; margin: 0 auto;
+    }
+    .cta-input-row input {
+      flex: 1; min-width: 200px;
+      padding: 0.9rem 1.3rem;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; border-radius: 100px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    }
+    .cta-input-row input::placeholder { color: rgba(255,255,255,0.6); }
+    .cta-input-row input:focus { outline: none; background: rgba(255,255,255,0.2); }
+    .btn-white {
+      background: #fff; color: var(--accent);
+      padding: 0.9rem 2rem; border-radius: 100px;
+      font-size: 0.9rem; font-weight: 600;
+      border: none; cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .btn-white:hover { transform: scale(1.03); }
+
+    /* ── FOOTER ── */
     footer {
-      background: #060606;
+      background: #0a0a0a; color: #555;
       padding: 3rem 4rem;
-      display: flex; flex-wrap: wrap; gap: 2rem;
-      align-items: center; justify-content: space-between;
-      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
     }
     .footer-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.5rem; color: var(--white); letter-spacing: 0.1em;
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 1.2rem; color: #fff;
+      display: flex; align-items: center; gap: 0.4rem;
     }
-    .footer-logo span { color: var(--red); }
     .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
-    .footer-links a {
-      color: var(--gray); text-decoration: none;
-      font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
-      transition: color 0.2s;
-    }
-    .footer-links a:hover { color: var(--white); }
-    .footer-copy {
-      font-size: 0.75rem; color: var(--gray);
-    }
+    .footer-links a { color: #555; text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+    footer p { font-size: 0.78rem; }
 
-    /* ─── ANIMATIONS ─── */
+    /* ── ANIMATIONS ── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50%       { transform: translateX(-50%) translateY(8px); }
-    }
 
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 768px) {
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 4rem; }
+      .hero-visual { display: none; }
       nav { padding: 1rem 1.5rem; }
       nav ul { display: none; }
       section { padding: 4rem 1.5rem; }
-      .stats-strip { padding: 2rem 1.5rem; }
-      .about-grid { grid-template-columns: 1fr; }
-      .about-visual { height: 260px; margin-bottom: 2rem; }
-      footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
-      .schedule-row { grid-template-columns: 1fr; gap: 0.3rem; padding: 1rem 1.5rem; }
-      .schedule-time { text-align: left; }
+      .logos-strip { padding: 1.5rem; gap: 1.5rem; }
+      .curriculum-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; padding: 2rem 1.5rem; }
+      .steps-grid { gap: 1rem; }
+      #how { padding: 4rem 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav>
-    <div class="logo">TAEKWONDO <span>ACADEMIA</span></div>
-    <ul>
-      <li><a href="#about">Nosotros</a></li>
-      <li><a href="#programs">Programas</a></li>
-      <li><a href="#instructors">Instructores</a></li>
-      <li><a href="#schedule">Horarios</a></li>
-      <li><a href="#cta" class="nav-cta">Inscríbete</a></li>
-    </ul>
-  </nav>
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo"><span class="logo-dot"></span> NeuralPath</a>
+  <ul>
+    <li><a href="#how">Cómo funciona</a></li>
+    <li><a href="#curriculum">Currículo</a></li>
+    <li><a href="#testimonials">Testimonios</a></li>
+    <li><a href="#pricing">Precios</a></li>
+    <li><a href="#cta-final" class="nav-cta">Empezar gratis →</a></li>
+  </ul>
+</nav>
 
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-lines"></div>
-    <p class="hero-kicker">Arte Marcial · Disciplina · Honor</p>
+<!-- HERO -->
+<section id="hero">
+  <div>
+    <div class="hero-badge"><span class="badge-dot"></span> Para principiantes absolutos · Sin experiencia previa</div>
     <h1 class="hero-title">
-      <span class="outline">TAE</span><br>
-      <span class="red">KWON</span><br>
-      DO
+      Aprende<br>
+      <span class="underline-green">Machine Learning</span><br>
+      desde cero.
     </h1>
-    <p class="hero-sub">Forjamos campeones dentro y fuera del tatami. Entrena con los mejores.</p>
+    <p class="hero-desc">
+      NeuralPath te lleva de "¿qué es una variable?" hasta construir tus propios modelos de inteligencia artificial — en español, a tu ritmo y sin prerrequisitos.
+    </p>
     <div class="hero-btns">
-      <a href="#cta" class="btn-primary">Clase de Prueba Gratis</a>
-      <a href="#programs" class="btn-outline">Ver Programas</a>
+      <a href="#cta-final" class="btn-primary">Comenzar gratis →</a>
+      <a href="#curriculum" class="btn-ghost">Ver el programa</a>
     </div>
-    <div class="hero-scroll">Scroll</div>
-  </section>
-
-  <!-- STATS -->
-  <div class="stats-strip">
-    <div class="stat">
-      <div class="stat-num">15+</div>
-      <div class="stat-label">Años de experiencia</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">500+</div>
-      <div class="stat-label">Estudiantes activos</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">80+</div>
-      <div class="stat-label">Medallas nacionales</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">6</div>
-      <div class="stat-label">Instructores certificados</div>
+    <div class="hero-trust">
+      <div class="trust-avatars">
+        <span>👩</span><span>👨</span><span>🧑</span><span>👩‍💻</span>
+      </div>
+      +2,400 estudiantes ya están aprendiendo
     </div>
   </div>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="about-grid">
-      <div class="about-visual">
-        <div class="about-card main">
-          <span class="about-icon">🥋</span>
-        </div>
-        <div class="about-card accent">
-          <span class="about-icon">🏅</span>
-          <span class="about-card-label">Campeones</span>
-          <span class="about-card-sub">nacionales e internacionales</span>
-        </div>
+  <div class="hero-visual">
+    <div class="hero-bg-circle"></div>
+    <div class="floating-card fc-top">
+      <span class="fc-icon">🧠</span>
+      <div>
+        <div class="fc-label">Modelo entrenado</div>
+        <div class="fc-sub">Precisión: 94.3%</div>
       </div>
-      <div class="about-text">
-        <p class="section-label">Sobre Nosotros</p>
-        <h2 class="section-title">Más que un<br>deporte.<br><em>Un estilo de vida.</em></h2>
-        <p class="section-body">
-          Nuestra academia combina la tradición del Taekwondo con métodos de entrenamiento modernos.
-          Desarrollamos atletas completos: físicamente fuertes, mentalmente resilientes y éticamente comprometidos.
-        </p>
-        <div class="values-list">
-          <div class="value-item"><div class="value-dot"></div>Entrenamiento personalizado para cada nivel</div>
-          <div class="value-item"><div class="value-dot"></div>Ambiente seguro, respetuoso e inclusivo</div>
-          <div class="value-item"><div class="value-dot"></div>Preparación para competencias locales e internacionales</div>
-          <div class="value-item"><div class="value-dot"></div>Valores de disciplina, respeto y perseverancia</div>
+    </div>
+    <div class="code-window">
+      <div class="code-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <span class="code-filename">mi_primer_modelo.py</span>
+      </div>
+      <div class="code-body">
+        <div><span class="c-comment"># Importar las herramientas</span></div>
+        <div><span class="c-keyword">from</span> <span class="c-var">sklearn</span> <span class="c-keyword">import</span> <span class="c-func">tree</span></div>
+        <div>&nbsp;</div>
+        <div><span class="c-comment"># Datos de entrenamiento</span></div>
+        <div><span class="c-var">datos</span> <span class="c-white">= [[</span><span class="c-num">1</span><span class="c-white">, </span><span class="c-num">0</span><span class="c-white">], [</span><span class="c-num">0</span><span class="c-white">, </span><span class="c-num">1</span><span class="c-white">]]</span></div>
+        <div><span class="c-var">etiquetas</span> <span class="c-white">= [</span><span class="c-string">"perro"</span><span class="c-white">, </span><span class="c-string">"gato"</span><span class="c-white">]</span></div>
+        <div>&nbsp;</div>
+        <div><span class="c-comment"># Crear y entrenar el modelo</span></div>
+        <div><span class="c-var">modelo</span> <span class="c-white">=</span> <span class="c-func">tree.DecisionTreeClassifier</span><span class="c-white">()</span></div>
+        <div><span class="c-var">modelo</span><span class="c-white">.</span><span class="c-func">fit</span><span class="c-white">(</span><span class="c-var">datos</span><span class="c-white">, </span><span class="c-var">etiquetas</span><span class="c-white">)</span></div>
+        <div>&nbsp;</div>
+        <div><span class="c-comment"># ¡Hacer una predicción!</span></div>
+        <div><span class="c-func">print</span><span class="c-white">(</span><span class="c-var">modelo</span><span class="c-white">.</span><span class="c-func">predict</span><span class="c-white">([[</span><span class="c-num">1</span><span class="c-white">, </span><span class="c-num">0</span><span class="c-white">]]))</span></div>
+      </div>
+      <div class="code-output">▶ ['perro'] — ¡Tu primer modelo funcionó! 🎉</div>
+    </div>
+    <div class="floating-card fc-bottom">
+      <div class="fc-progress">
+        <div class="fc-prog-label">Módulo 3 de 8</div>
+        <div class="fc-prog-bar"><div class="fc-prog-fill"></div></div>
+      </div>
+      <div class="fc-pct">68%</div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos-strip">
+  <span class="logos-label">Aprenderás a usar</span>
+  <div class="tech-pill"><span>🐍</span> Python</div>
+  <div class="tech-pill"><span>🔢</span> NumPy</div>
+  <div class="tech-pill"><span>🐼</span> Pandas</div>
+  <div class="tech-pill"><span>⚙️</span> Scikit-learn</div>
+  <div class="tech-pill"><span>📊</span> Matplotlib</div>
+  <div class="tech-pill"><span>🔥</span> TensorFlow</div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-chip">¿Cómo funciona?</div>
+  <h2 class="section-title">Tu camino al ML,<br><em>paso a paso</em></h2>
+  <p class="section-body">Sin confusión, sin saltos gigantes. Cada lección construye sobre la anterior hasta que dominas los conceptos con confianza.</p>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-icon">📖</div>
+      <div class="step-title">Conceptos en español</div>
+      <div class="step-desc">Explicamos cada idea con analogías del mundo real — sin jerga innecesaria ni suposiciones de conocimiento previo.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-icon">💻</div>
+      <div class="step-title">Practica en el navegador</div>
+      <div class="step-desc">Escribe y ejecuta código Python directamente en tu navegador. Sin instalar nada, sin configurar nada.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-icon">🧪</div>
+      <div class="step-title">Mini proyectos reales</div>
+      <div class="step-desc">Cada módulo termina con un pequeño proyecto real: predecir precios, clasificar imágenes, analizar texto.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">04</div>
+      <div class="step-icon">🏆</div>
+      <div class="step-title">Certificado final</div>
+      <div class="step-desc">Al completar el programa recibes un certificado verificable que puedes compartir en LinkedIn y tu portafolio.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CURRICULUM -->
+<section id="curriculum">
+  <div class="section-chip">Currículo</div>
+  <h2 class="section-title">8 módulos que te llevan<br>de <em>cero a modelo</em></h2>
+  <p class="section-body">Diseñado para personas sin experiencia técnica. Avanza a tu propio ritmo, con acceso de por vida.</p>
+  <div class="curriculum-grid">
+    <div class="module-card">
+      <div class="module-num done">01</div>
+      <div class="module-info">
+        <div class="module-title">Fundamentos de Python</div>
+        <div class="module-meta"><span>📚 8 lecciones</span><span>⏱ ~3 horas</span></div>
+        <span class="module-tag free">Gratis</span>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num done">02</div>
+      <div class="module-info">
+        <div class="module-title">Datos con Pandas & NumPy</div>
+        <div class="module-meta"><span>📚 10 lecciones</span><span>⏱ ~4 horas</span></div>
+        <span class="module-tag free">Gratis</span>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">03</div>
+      <div class="module-info">
+        <div class="module-title">Visualización de Datos</div>
+        <div class="module-meta"><span>📚 6 lecciones</span><span>⏱ ~2 horas</span></div>
+        <span class="module-tag">Incluido</span>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">04</div>
+      <div class="module-info">
+        <div class="module-title">Aprendizaje Supervisado</div>
+        <div class="module-meta"><span>📚 12 lecciones</span><span>⏱ ~5 horas</span></div>
+        <span class="module-tag">Incluido</span>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">05</div>
+      <div class="module-info">
+        <div class="module-title">Aprendizaje No Supervisado</div>
+        <div class="module-meta"><span>📚 9 lecciones</span><span>⏱ ~3.5 horas</span></div>
+        <span class="module-tag">Incluido</span>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">06</div>
+      <div class="module-info">
+        <div class="module-title">Redes Neuronales Básicas</div>
+        <div class="module-meta"><span>📚 11 lecciones</span><span>⏱ ~5 horas</span></div>
+        <span class="module-tag">Incluido</span>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">07</div>
+      <div class="module-info">
+        <div class="module-title">Procesamiento de Lenguaje</div>
+        <div class="module-meta"><span>📚 8 lecciones</span><span>⏱ ~4 horas</span></div>
+        <span class="module-tag">Incluido</span>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">08</div>
+      <div class="module-info">
+        <div class="module-title">Proyecto Final + Portafolio</div>
+        <div class="module-meta"><span>📚 5 lecciones</span><span>⏱ ~6 horas</span></div>
+        <span class="module-tag">Incluido</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-chip">Testimonios</div>
+  <h2 class="section-title">Lo que dicen<br>nuestros <em>estudiantes</em></h2>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">Venía de las humanidades, nunca había programado. En 3 meses entendí regresión lineal y entrené mi primer modelo. La didáctica es increíble.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">👩</div>
+        <div>
+          <div class="testi-name">Mariana López</div>
+          <div class="testi-role">Estudiante de Psicología · Costa Rica</div>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- PROGRAMS -->
-  <section id="programs">
-    <div class="programs-header">
-      <p class="section-label">Programas</p>
-      <h2 class="section-title">Entrenamiento para<br><em>cada etapa</em></h2>
-    </div>
-    <div class="programs-grid">
-      <div class="program-card">
-        <div class="program-top">
-          <div class="program-emoji">🧒</div>
-          <div class="program-name">Infantil</div>
-          <div class="program-age">4 – 7 años</div>
-        </div>
-        <div class="program-bottom">
-          <p class="program-desc">Clases lúdicas y seguras para introducir a los más pequeños al arte marcial. Coordinación, equilibrio y valores desde temprana edad.</p>
-          <span class="program-tag">Iniciación</span>
-        </div>
-      </div>
-      <div class="program-card">
-        <div class="program-top">
-          <div class="program-emoji">🧑</div>
-          <div class="program-name">Juvenil</div>
-          <div class="program-age">8 – 15 años</div>
-        </div>
-        <div class="program-bottom">
-          <p class="program-desc">Técnica, competencia y formación de carácter. Preparamos a jóvenes para cinturones avanzados y torneos nacionales.</p>
-          <span class="program-tag">Intermedio · Avanzado</span>
-        </div>
-      </div>
-      <div class="program-card">
-        <div class="program-top">
-          <div class="program-emoji">🧑‍💼</div>
-          <div class="program-name">Adultos</div>
-          <div class="program-age">16 años en adelante</div>
-        </div>
-        <div class="program-bottom">
-          <p class="program-desc">Fitness, defensa personal y arte marcial para adultos de todos los niveles. Fuerza, flexibilidad y confianza en cada clase.</p>
-          <span class="program-tag">Todos los niveles</span>
-        </div>
-      </div>
-      <div class="program-card">
-        <div class="program-top">
-          <div class="program-emoji">🏆</div>
-          <div class="program-name">Élite</div>
-          <div class="program-age">Selección competitiva</div>
-        </div>
-        <div class="program-bottom">
-          <p class="program-desc">Programa de alto rendimiento para atletas con miras a torneos regionales, nacionales e internacionales. Solo por invitación.</p>
-          <span class="program-tag">Alto rendimiento</span>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">Había intentado con otros cursos en inglés y siempre me perdía. NeuralPath explica todo tan claro que lo entiendes en el primer intento.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">👨</div>
+        <div>
+          <div class="testi-name">Carlos Ramírez</div>
+          <div class="testi-role">Contador · México</div>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- INSTRUCTORS -->
-  <section id="instructors">
-    <div class="instructors-inner">
-      <div class="instructors-header">
-        <p class="section-label">Equipo</p>
-        <h2 class="section-title">Nuestros <em>Instructores</em></h2>
-        <p class="section-body">Maestros certificados con experiencia nacional e internacional, comprometidos con tu desarrollo.</p>
-      </div>
-      <div class="instructors-grid">
-        <div class="instructor-card">
-          <div class="instructor-avatar">🥋</div>
-          <div class="instructor-name">Master Kim</div>
-          <div class="instructor-belt">Cinturón Negro 7° Dan</div>
-          <p class="instructor-bio">Fundador de la academia. 25 años formando campeones en Costa Rica y Corea del Sur.</p>
-        </div>
-        <div class="instructor-card">
-          <div class="instructor-avatar">🥋</div>
-          <div class="instructor-name">Profa. Valeria</div>
-          <div class="instructor-belt">Cinturón Negro 4° Dan</div>
-          <p class="instructor-bio">Especialista en programas infantiles y juveniles. Medalla de plata en Centroamérica 2019.</p>
-        </div>
-        <div class="instructor-card">
-          <div class="instructor-avatar">🥋</div>
-          <div class="instructor-name">Prof. Andrés</div>
-          <div class="instructor-belt">Cinturón Negro 3° Dan</div>
-          <p class="instructor-bio">Entrenador de élite y preparación física. Especialista en Poomsae y combate olímpico.</p>
-        </div>
-        <div class="instructor-card">
-          <div class="instructor-avatar">🥋</div>
-          <div class="instructor-name">Profa. Sofía</div>
-          <div class="instructor-belt">Cinturón Negro 2° Dan</div>
-          <p class="instructor-bio">Instructora de adultos y defensa personal. Certificada por la Federación Mundial de Taekwondo.</p>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">Conseguí mi primer trabajo como analista de datos a los 3 meses de terminar el curso. El proyecto final del portafolio marcó la diferencia.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">🧑</div>
+        <div>
+          <div class="testi-name">Sebastián Torres</div>
+          <div class="testi-role">Analista de Datos · Colombia</div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- SCHEDULE -->
-  <section id="schedule">
-    <div class="schedule-inner">
-      <div class="schedule-header">
-        <p class="section-label">Horarios</p>
-        <h2 class="section-title">Encuentra tu <em>clase</em></h2>
-      </div>
-      <div class="schedule-grid">
-        <div class="schedule-row head">
-          <span>Día</span><span>Clase</span><span style="text-align:right">Horario</span>
-        </div>
-        <div class="schedule-row">
-          <span class="schedule-day">Lun · Mié · Vie</span>
-          <span class="schedule-class">Infantil (4–7 años)</span>
-          <span class="schedule-time">3:30 – 4:30 pm</span>
-        </div>
-        <div class="schedule-row">
-          <span class="schedule-day">Lun · Mié · Vie</span>
-          <span class="schedule-class">Juvenil (8–15 años)</span>
-          <span class="schedule-time">5:00 – 6:30 pm</span>
-        </div>
-        <div class="schedule-row">
-          <span class="schedule-day">Mar · Jue · Sáb</span>
-          <span class="schedule-class">Adultos – Todos los niveles</span>
-          <span class="schedule-time">6:00 – 7:30 pm</span>
-        </div>
-        <div class="schedule-row">
-          <span class="schedule-day">Sábado</span>
-          <span class="schedule-class">Élite – Alto Rendimiento</span>
-          <span class="schedule-time">8:00 – 10:00 am</span>
-        </div>
-        <div class="schedule-row">
-          <span class="schedule-day">Sábado</span>
-          <span class="schedule-class">Defensa Personal – Adultos</span>
-          <span class="schedule-time">10:30 am – 12:00 pm</span>
-        </div>
-      </div>
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-chip">Precios</div>
+  <h2 class="section-title">Invierte en tu futuro<br>con el plan <em>correcto</em></h2>
+  <p class="section-body">Empieza gratis. Actualiza cuando quieras. Sin contratos ni sorpresas.</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-plan">Gratuito</div>
+      <div class="price-amount">$0</div>
+      <div class="price-period">Para siempre</div>
+      <ul class="price-features">
+        <li><span class="price-check">✓</span> Módulos 1 y 2 completos</li>
+        <li><span class="price-check">✓</span> Entorno de código en navegador</li>
+        <li><span class="price-check">✓</span> Comunidad de Discord</li>
+        <li><span style="color:#ccc">✗</span> Módulos 3–8</li>
+        <li><span style="color:#ccc">✗</span> Certificado verificable</li>
+        <li><span style="color:#ccc">✗</span> Mentoría con instructores</li>
+      </ul>
+      <a href="#cta-final" class="btn-price-dark">Empezar gratis</a>
     </div>
-  </section>
-
-  <!-- CTA -->
-  <section id="cta">
-    <p class="section-label">¡Únete hoy!</p>
-    <h2 class="section-title">Tu primera clase<br>es <em style="color:var(--black)">GRATIS</em></h2>
-    <p class="section-body">Déjanos tu nombre y correo y nos ponemos en contacto para agendar tu clase de prueba.</p>
-    <div class="cta-form">
-      <input type="text" placeholder="Tu nombre" />
-      <input type="email" placeholder="Tu correo electrónico" />
-      <button class="btn-dark" onclick="handleSubmit()">Inscribirme</button>
+    <div class="price-card featured">
+      <div class="price-badge">Más popular</div>
+      <div class="price-plan">Completo</div>
+      <div class="price-amount">$49</div>
+      <div class="price-period">pago único · acceso de por vida</div>
+      <ul class="price-features">
+        <li><span class="price-check">✓</span> Los 8 módulos completos</li>
+        <li><span class="price-check">✓</span> Entorno de código en navegador</li>
+        <li><span class="price-check">✓</span> Comunidad de Discord</li>
+        <li><span class="price-check">✓</span> Certificado verificable</li>
+        <li><span class="price-check">✓</span> Proyectos guiados de portafolio</li>
+        <li><span class="price-check">✓</span> Actualizaciones de por vida</li>
+      </ul>
+      <a href="#cta-final" class="btn-price-primary">Obtener acceso completo</a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-logo">TAEKWONDO <span>ACADEMIA</span></div>
-    <div class="footer-links">
-      <a href="#about">Nosotros</a>
-      <a href="#programs">Programas</a>
-      <a href="#schedule">Horarios</a>
-      <a href="#cta">Contacto</a>
-    </div>
-    <div class="footer-copy">© 2026 Academia Taekwondo. Todos los derechos reservados.</div>
-  </footer>
+<!-- CTA FINAL -->
+<section id="cta-final">
+  <div class="section-chip" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.2)">¡Empieza hoy!</div>
+  <h2 class="section-title">Tu camino al Machine Learning<br>comienza aquí</h2>
+  <p class="section-body">Únete gratis hoy. Sin tarjeta de crédito. Sin instalaciones. Solo tú y tu primera línea de código.</p>
+  <div class="cta-input-row">
+    <input type="email" placeholder="tu@correo.com" id="emailInput" />
+    <button class="btn-white" onclick="handleSignup()">Comenzar gratis →</button>
+  </div>
+</section>
 
-  <script>
-    // Smooth reveal on scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.style.opacity = '1';
-          e.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, { threshold: 0.1 });
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><span style="color:var(--accent)">●</span> NeuralPath</div>
+  <div class="footer-links">
+    <a href="#how">Cómo funciona</a>
+    <a href="#curriculum">Currículo</a>
+    <a href="#pricing">Precios</a>
+    <a href="#testimonials">Testimonios</a>
+    <a href="#cta-final">Contacto</a>
+  </div>
+  <p>© 2026 NeuralPath. Hecho con 🧠 en Latinoamérica.</p>
+</footer>
 
-    document.querySelectorAll('.program-card, .instructor-card, .schedule-row:not(.head)').forEach(el => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(20px)';
-      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-      observer.observe(el);
-    });
-
-    // Form submit
-    function handleSubmit() {
-      const inputs = document.querySelectorAll('.cta-form input');
-      const name = inputs[0].value.trim();
-      const email = inputs[1].value.trim();
-      if (!name || !email) {
-        alert('Por favor completa tu nombre y correo.');
-        return;
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
       }
-      alert(`¡Gracias, ${name}! Nos pondremos en contacto contigo pronto a ${email}. 🥋`);
-      inputs.forEach(i => i.value = '');
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll(
+    '.step-card, .module-card, .testi-card, .price-card'
+  ).forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(22px)';
+    el.style.transition = `opacity 0.5s ${i * 0.06}s ease, transform 0.5s ${i * 0.06}s ease`;
+    observer.observe(el);
+  });
+
+  // Signup
+  function handleSignup() {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email || !email.includes('@')) {
+      alert('Por favor ingresa un correo válido.');
+      return;
     }
-  </script>
+    alert(`¡Bienvenido/a a NeuralPath! 🧠\nTe enviamos un correo a ${email} para activar tu cuenta gratuita.`);
+    document.getElementById('emailInput').value = '';
+  }
+</script>
 </body>
 </html>
